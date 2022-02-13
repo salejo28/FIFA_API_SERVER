@@ -1,11 +1,7 @@
 import axios from "axios";
 
 import { Player } from "app/models";
-import {
-  Hash,
-  PlayerResponseInterface,
-  PlayerTempInterface,
-} from "app/interfaces";
+import { PlayerResponseInterface, PlayerTempInterface } from "app/interfaces";
 
 export const getInfoFromApiFIFA = async (): Promise<void> => {
   try {
@@ -17,7 +13,6 @@ export const getInfoFromApiFIFA = async (): Promise<void> => {
       );
       const data = responseInfoPages.data;
       const totalPages = data.totalPages;
-      const hash: Hash = {};
       for (let index = 1; index <= totalPages; index++) {
         const response = await axios.get(
           `https://www.easports.com/fifa/ultimate-team/api/fut/item?page=${index}`
@@ -30,17 +25,11 @@ export const getInfoFromApiFIFA = async (): Promise<void> => {
               position: player.position,
               nationality: player.nation.name,
               club: player.club.name,
-              idFifa: player.baseId,
             };
           }
         );
-        const uniquePlayers = players.filter((player) => {
-          const exist = !hash[player.idFifa as number];
-          hash[player.idFifa as number] = true;
-          return exist;
-        });
         await Promise.all(
-          uniquePlayers.map(async (player) => {
+          players.map(async (player) => {
             delete player.idFifa;
             const newPlayer = new Player(player);
             await newPlayer.save();
