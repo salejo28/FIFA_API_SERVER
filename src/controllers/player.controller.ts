@@ -10,7 +10,7 @@ export default class PlayerController {
         club: { $regex: name, $options: "i" },
       },
       {
-        limit: 10,
+        limit: 24,
         page: page || 1,
       }
     );
@@ -32,7 +32,7 @@ export default class PlayerController {
       const players = await Player.paginate(
         {},
         {
-          limit: 10,
+          limit: 24,
           page: parseInt(page?.toString() as string) || 1,
           sort: { name: order?.toString().toLowerCase() === "asc" ? 1 : -1 },
         }
@@ -51,7 +51,7 @@ export default class PlayerController {
         name: { $regex: search, $options: "gi" },
       },
       {
-        limit: 10,
+        limit: 24,
         page: parseInt(page?.toString() as string) || 1,
         sort: { name: order?.toString().toLowerCase() === "asc" ? 1 : -1 },
       }
